@@ -1,0 +1,80 @@
+/* Importación de fuentes que imitan el PDF */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Crimson+Pro:ital,wght@1,400;1,600&display=swap');
+
+:root {
+    --verde-pdf: #2d5a27; /* Verde oscuro principal */
+    --verde-claro: #4a7c44;
+    --bege-pdf: #fdfbf7; /* Fondo orgánico */
+    --marrom-texto: #1a1c19;
+}
+
+body { 
+    font-family: 'Montserrat', sans-serif; 
+    background-color: var(--bege-pdf);
+    color: var(--marrom-texto);
+    overflow: hidden; 
+}
+
+#map { height: calc(100vh - 64px); width: 100%; }
+
+.sidebar { 
+    height: calc(100vh - 64px); 
+    background: var(--bege-pdf);
+    border-right: 1px solid #e5e0d8;
+}
+
+/* Estilo de los Items al estilo PDF */
+.horta-item {
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+    background: white;
+    margin: 8px;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.active-card { 
+    border-left-color: var(--verde-pdf); 
+    background-color: #f0fdf4; 
+    transform: translateX(4px);
+}
+
+.font-sidebar-title {
+    font-weight: 700;
+    color: var(--verde-pdf);
+    letter-spacing: -0.02em;
+}
+
+/* Tipografía de descripción (itálica como en el PDF) */
+#modal-desc {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    color: #3d403b;
+}
+
+/* Botones y Widgets */
+.bg-verde-pdf { background-color: var(--verde-pdf); }
+
+/* Scrollbar personalizada orgánica */
+#hortas-list::-webkit-scrollbar { width: 5px; }
+#hortas-list::-webkit-scrollbar-track { background: var(--bege-pdf); }
+#hortas-list::-webkit-scrollbar-thumb { background: #d1cdc7; border-radius: 10px; }
+
+/* Modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    background-color: rgba(26, 28, 25, 0.8);
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.modal.active { display: flex; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
