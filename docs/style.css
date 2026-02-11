@@ -1,64 +1,124 @@
-/* Importación de fuentes que imitan el PDF */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Crimson+Pro:ital,wght@1,400;1,600&display=swap');
+/* 
+ * Hortas Comunitarias - Estilos Optimizados
+ * Versión 2.0 - CSS Limpio y Eficiente
+ */
 
 :root {
-    --verde-pdf: #2d5a27; /* Verde oscuro principal */
+    --verde-pdf: #2d5a27;
     --verde-claro: #4a7c44;
-    --bege-pdf: #fdfbf7; /* Fondo orgánico */
+    --bege-pdf: #fdfbf7;
     --marrom-texto: #1a1c19;
 }
 
-body { 
-    font-family: 'Montserrat', sans-serif; 
-    background-color: var(--bege-pdf);
-    color: var(--marrom-texto);
-    overflow: hidden; 
+* {
+    box-sizing: border-box;
 }
 
-#map { height: calc(100vh - 64px); width: 100%; }
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bege-pdf);
+    color: var(--marrom-texto);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
 
-.sidebar { 
-    height: calc(100vh - 64px); 
+/* Mapa */
+#map {
+    height: calc(100vh - 64px);
+    width: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    height: calc(100vh - 64px);
     background: var(--bege-pdf);
     border-right: 1px solid #e5e0d8;
 }
 
-/* Estilo de los Items al estilo PDF */
+/* Elementos de horta */
 .horta-item {
     border-left: 4px solid transparent;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: white;
-    margin: 8px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.active-card { 
-    border-left-color: var(--verde-pdf); 
-    background-color: #f0fdf4; 
-    transform: translateX(4px);
+.horta-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.active-card {
+    border-left: 6px solid var(--verde-pdf);
+    background: linear-gradient(to right, #f0fdf4, #ffffff);
+    transform: translateX(8px) scale(1.02);
+    box-shadow: 0 12px 24px -8px rgba(45, 90, 39, 0.2), 0 4px 6px -2px rgba(45, 90, 39, 0.05);
+    z-index: 10;
+    border-radius: 0 16px 16px 0 !important;
+    position: relative;
+}
+
+.active-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(45, 90, 39, 0.1);
+    border-radius: 0 16px 16px 0;
+    pointer-events: none;
+}
+
+.active-card .font-sidebar-title {
+    color: var(--verde-pdf);
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.active-card .ver-detalhes {
+    background-color: var(--verde-pdf);
+    color: white !important;
+    padding: 2px 8px;
+    border-radius: 6px;
+    text-decoration: none !important;
+}
+
+/* Tipografía */
 .font-sidebar-title {
     font-weight: 700;
     color: var(--verde-pdf);
     letter-spacing: -0.02em;
 }
 
-/* Tipografía de descripción (itálica como en el PDF) */
+.font-sidebar-sub {
+    color: #6b7280;
+}
+
 #modal-desc {
     font-family: 'Crimson Pro', serif;
     font-style: italic;
     color: #3d403b;
 }
 
-/* Botones y Widgets */
-.bg-verde-pdf { background-color: var(--verde-pdf); }
+.font-crimson {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+}
 
-/* Scrollbar personalizada orgánica */
-#hortas-list::-webkit-scrollbar { width: 5px; }
-#hortas-list::-webkit-scrollbar-track { background: var(--bege-pdf); }
-#hortas-list::-webkit-scrollbar-thumb { background: #d1cdc7; border-radius: 10px; }
+/* Scrollbar personalizada */
+#hortas-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#hortas-list::-webkit-scrollbar-track {
+    background: var(--bege-pdf);
+}
+
+#hortas-list::-webkit-scrollbar-thumb {
+    background: #d1cdc7;
+    border-radius: 10px;
+}
+
+#hortas-list::-webkit-scrollbar-thumb:hover {
+    background: #b5b0a3;
+}
 
 /* Modales */
 .modal {
@@ -72,9 +132,156 @@ body {
     justify-content: center;
     padding: 1rem;
 }
-.modal.active { display: flex; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+.modal.active {
+    display: flex;
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal:not(.active) {
+    pointer-events: none;
+}
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Botones */
+button {
+    transition: all 0.2s ease-out;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button:focus-visible {
+    outline: 2px solid var(--verde-pdf);
+    outline-offset: 2px;
+}
+
+/* Resultados de búsqueda */
+.search-item {
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f3f4f6;
+    transition: all 0.2s ease;
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item:hover {
+    background-color: #f0fdf4;
+}
+
+/* Input focus states */
+input:focus {
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: var(--verde-pdf);
+}
+
+/* Imágenes responsivas */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.horta-thumb {
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+/* Cards del modal */
+.modal .bg-white {
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Transiciones suaves */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+}
+
+/* Optimización de rendimiento */
+.modal.active * {
+    will-change: auto;
+}
+
+#map {
+    will-change: transform;
+}
+
+/* Estilos específicos para accesibilidad */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -384px;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        width: 320px;
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    #map {
+        width: 100%;
+    }
+}
+
+/* Optimización de fuentes */
+html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevenir zoom en mobile */
+@media (max-width: 600px) {
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    body,
+    .modal,
+    nav,
+    .sidebar {
+        display: none;
+    }
 }
