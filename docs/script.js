@@ -275,6 +275,16 @@ function focusHorta(id, updateMap = true) {
         activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    // Cerrar sidebar en móvil al seleccionar una horta
+    if (window.innerWidth < 1024) {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        if (sidebar && overlay && sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+        }
+    }
+
     // Mostrar tooltip del marcador
     const mObj = markers.find(m => m.id === id);
     if (mObj && mObj.marker) {
@@ -545,6 +555,21 @@ function setupFilters() {
     if (rainBtn) {
         rainBtn.addEventListener('click', () => window.openModal('rain-modal'));
     }
+
+    // Sidebar Toggle para Mobile
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (menuToggle && sidebar && overlay) {
+        const toggleSidebar = () => {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        };
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    }
 }
 
 // ==================== INICIALIZACIÓN ====================
@@ -558,6 +583,11 @@ window.addEventListener('load', () => {
 
     // Re-cargar clima cada 30 minutos
     setInterval(getWeather, 1800000);
+
+    // Ajustar mapa al redimensionar (especialmente por cambios de layout responsive)
+    window.addEventListener('resize', debounce(() => {
+        if (map) map.invalidateSize();
+    }, 200));
 });
 
 // Cleanup en beforeunload
