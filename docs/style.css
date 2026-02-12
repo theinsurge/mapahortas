@@ -4,10 +4,10 @@
  */
 
 :root {
-    --verde-pdf: #2d5a27;
-    --verde-claro: #4a7c44;
-    --bege-pdf: #fdfbf7;
-    --marrom-texto: #1a1c19;
+    --verde-pdf: #80987c;
+    --verde-claro: #bfd1bc;
+    --bege-pdf: #e0d0b2;
+    --marrom-texto: #282824;
 }
 
 * {
@@ -49,7 +49,7 @@ body {
 
 .active-card {
     border-left: 6px solid var(--verde-pdf);
-    background: linear-gradient(to right, #f0fdf4, #ffffff);
+    background: linear-gradient(to right, #bfd1bc, #ffffff);
     transform: translateX(8px) scale(1.02);
     box-shadow: 0 12px 24px -8px rgba(45, 90, 39, 0.2), 0 4px 6px -2px rgba(45, 90, 39, 0.05);
     z-index: 10;
@@ -94,7 +94,7 @@ body {
 #modal-desc {
     font-family: 'Crimson Pro', serif;
     font-style: italic;
-    color: #3d403b;
+    color: #282824;
 }
 
 .font-crimson {
