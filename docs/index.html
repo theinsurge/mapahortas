@@ -34,18 +34,24 @@
 
 <body class="bg-[#fdfbf7] overflow-hidden">
     <!-- Navbar -->
-    <nav class="bg-[#2d5a27] text-white h-16 flex items-center justify-between px-6 shadow-md z-[2000] relative">
-        <div class="flex items-center gap-3">
-            <img src="logo10.png" alt="Logo" class="h-14 w-auto rounded-lg">
-            <div>
-                <h1 class="font-bold text-sm tracking-tight leading-none uppercase">Hortas Comunitárias</h1>
-                <p class="text-[10px] opacity-80 font-medium tracking-widest">TERESINA • PIAUÍ</p>
+    <nav
+        class="bg-[#2d5a27] text-white h-16 flex items-center justify-between px-4 md:px-6 shadow-md z-[2000] relative">
+        <div class="flex items-center gap-2 md:gap-3">
+            <!-- Hamburguer Menu for Mobile -->
+            <button id="menu-toggle" class="lg:hidden p-2 -ml-2 hover:bg-white/10 rounded-lg transition-colors">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+
+            <img src="logo10.png" alt="Logo" class="h-10 md:h-14 w-auto rounded-lg">
+            <div class="hidden sm:block">
+                <h1 class="font-bold text-xs md:text-sm tracking-tight leading-none uppercase">Hortas Comunitárias</h1>
+                <p class="text-[8px] md:text-[10px] opacity-80 font-medium tracking-widest">TERESINA • PIAUÍ</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-4">
-            <!-- Buscador de plantas -->
-            <div class="relative hidden lg:block w-72">
+        <div class="flex items-center gap-2 md:gap-4">
+            <!-- Buscador de plantas (Escondido en móvil, se puede integrar luego en un modal o expandible) -->
+            <div class="relative hidden xl:block w-72">
                 <i
                     class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-xs"></i>
                 <input id="plant-search" type="text" autocomplete="off"
@@ -56,23 +62,23 @@
                 </div>
             </div>
 
-            <!-- Botón PDF -->
+            <!-- Botón PDF (Compacto en móvil) -->
             <a href="Hortas.pdf" target="_blank" rel="noopener noreferrer"
-                class="bg-white text-[#2d5a27] px-5 py-2 rounded-full text-[11px] font-bold hover:bg-green-50 transition shadow-sm active:scale-95 flex items-center gap-2 uppercase tracking-wider">
-                <i class="fa-solid fa-file-pdf"></i> Baixar Mapa
+                class="bg-white text-[#2d5a27] px-3 md:px-5 py-2 rounded-full text-[10px] md:text-[11px] font-bold hover:bg-green-50 transition shadow-sm active:scale-95 flex items-center gap-2 uppercase tracking-wider">
+                <i class="fa-solid fa-file-pdf"></i> <span class="hidden xs:inline">Baixar Mapa</span>
             </a>
 
-            <div class="h-6 w-[1px] bg-white/20"></div>
+            <div class="hidden sm:block h-6 w-[1px] bg-white/20"></div>
 
             <!-- Widgets climáticos -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-1 md:gap-2">
                 <button id="lunar-btn"
-                    class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
+                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
                     <span id="lunar-widget">🌑</span>
                     <span class="hidden md:inline uppercase">Lua</span>
                 </button>
                 <button id="rain-btn"
-                    class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
+                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
                     <i class="fa-solid fa-cloud-sun"></i>
                     <span id="rain-widget" class="uppercase">--°C</span>
                 </button>
@@ -80,9 +86,13 @@
         </div>
     </nav>
 
-    <main class="flex">
+    <main class="flex h-[calc(100vh-64px)]">
+        <div id="sidebar-overlay"
+            class="fixed inset-0 bg-black/40 z-[1900] opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden focus-visible:outline-none">
+        </div>
         <!-- Sidebar -->
-        <aside class="sidebar w-96 flex flex-col shadow-xl z-10 relative bg-[#fdfbf7]">
+        <aside id="sidebar"
+            class="sidebar fixed inset-y-16 left-0 w-[85vw] sm:w-[384px] lg:static lg:w-96 flex flex-col shadow-xl z-[1950] -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out bg-[#fdfbf7]">
             <!-- Filtro -->
             <div class="p-6 border-b border-gray-100 bg-white">
                 <div class="relative">
