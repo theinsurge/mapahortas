@@ -7,7 +7,7 @@
 // ==================== ESTADO GLOBAL ====================
 let map;
 let markers = [];
-let allHortas = [];
+let allRecords = []; // Combina hortas y campos
 let currentPhotoIndex = 1;
 let currentHortaId = null;
 const teresinaCoords = [-5.0892, -42.8016];
@@ -121,43 +121,137 @@ function initMap() {
     // Agregar selector de capas
     L.control.layers(
         {
-            '🌟': cartoLight,
-            'Osm': osm,
+            'claro': cartoLight,
+            'color': osm,
         },
         {},
         { position: 'topleft', collapsed: true }
     ).addTo(map);
+
+    // Custom Geolocation Control
+    const LocControl = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control locate-control');
+            const button = L.DomUtil.create('a', 'locate-btn', container);
+            button.innerHTML = '<i class="fa-solid fa-location-crosshairs"></i>';
+            button.href = '#';
+            button.title = 'Minha Localização';
+
+            L.DomEvent.on(button, 'click', function (e) {
+                L.DomEvent.stopPropagation(e);
+                L.DomEvent.preventDefault(e);
+
+                if (navigator.geolocation) {
+                    map.locate({ setView: true, maxZoom: 16 });
+                } else {
+                    alert("Geolocalização não é suportada pelo seu navegador.");
+                }
+            });
+
+            return container;
+        }
+    });
+
+    map.addControl(new LocControl());
+
+    map.on('locationfound', function (e) {
+        const radius = e.accuracy / 2;
+        if (window.userMarker) {
+            map.removeLayer(window.userMarker);
+            map.removeLayer(window.userCircle);
+        }
+        window.userCircle = L.circle(e.latlng, radius, { color: '#80987c', fillOpacity: 0.15 }).addTo(map);
+        window.userMarker = L.marker(e.latlng).addTo(map)
+            .bindPopup("Você está aqui").openPopup();
+    });
+
+    map.on('locationerror', function (e) {
+        alert("Não foi posible encontrar sua localização: " + e.message);
+    });
+
+    // Custom Reset View Control
+    const ResetControl = L.Control.extend({
+        options: { position: 'bottomright' },
+        onAdd: function () {
+            const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control reset-control');
+            const button = L.DomUtil.create('a', 'reset-btn', container);
+            button.innerHTML = '<i class="fa-solid fa-house"></i>';
+            button.href = '#';
+            button.title = 'Vista Inicial';
+
+            L.DomEvent.on(button, 'click', function (e) {
+                L.DomEvent.stopPropagation(e);
+                L.DomEvent.preventDefault(e);
+                map.flyTo(teresinaCoords, 13, { duration: 1 });
+            });
+
+            return container;
+        }
+    });
+
+    map.addControl(new ResetControl());
+
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 }
 
 // ==================== CARGA Y RENDERIZADO DE HORTAS ====================
 
-function loadHortas() {
+function loadAllData() {
     const cacheBuster = `?t=${Date.now()}`;
-    Papa.parse("dados/hortas.csv" + cacheBuster, {
-        download: true,
-        header: true,
-        delimiter: ";",
-        skipEmptyLines: true,
-        dynamicTyping: false,
-        complete: (results) => {
-            allHortas = results.data
-                .map((h, index) => {
-                    const lat = parseFloat(String(h.latitude).replace(',', '.'));
-                    const lng = parseFloat(String(h.longitude).replace(',', '.'));
-                    return { ...h, id_internal: index, lat, lng };
+
+    // Promesas para cargar ambos CSVs
+    const fetchHortas = new Promise((resolve, reject) => {
+        Papa.parse("dados/hortas.csv" + cacheBuster, {
+            download: true,
+            header: true,
+            delimiter: ";",
+            skipEmptyLines: true,
+            complete: (results) => {
+                const data = results.data.map(h => ({ ...h, type: 'horta' }));
+                resolve(data);
+            },
+            error: reject
+        });
+    });
+
+    const fetchCampos = new Promise((resolve, reject) => {
+        Papa.parse("dados/campos.csv" + cacheBuster, {
+            download: true,
+            header: true,
+            delimiter: ";",
+            skipEmptyLines: true,
+            complete: (results) => {
+                const data = results.data.map(c => ({
+                    ...c,
+                    id: c.Id, // Normalizar id
+                    type: 'campo'
+                }));
+                resolve(data);
+            },
+            error: reject
+        });
+    });
+
+    Promise.all([fetchHortas, fetchCampos])
+        .then(([hortas, campos]) => {
+            const combined = [...hortas, ...campos];
+            allRecords = combined
+                .map((r, index) => {
+                    const lat = parseFloat(String(r.latitude).replace(',', '.'));
+                    const lng = parseFloat(String(r.longitude).replace(',', '.'));
+                    return { ...r, id_internal: index, lat, lng };
                 })
-                .filter(h => !isNaN(h.lat) && h.lat && h.lng);
+                .filter(r => !isNaN(r.lat) && r.lat && r.lng);
 
             buildPlantIndex();
-            renderHortas(allHortas);
-        },
-        error: (error) => {
-            console.error("Error al cargar CSV:", error);
+            renderRecords(allRecords);
+        })
+        .catch(error => {
+            console.error("Error al cargar datos:", error);
             document.getElementById('hortas-list').innerHTML =
-                '<div class="p-4 text-red-600">Error al cargar hortas</div>';
-        }
-    });
+                '<p class="text-center p-4 text-red-500">Erro ao carregar dados.</p>';
+        });
 }
 
 /**
@@ -166,7 +260,9 @@ function loadHortas() {
 function buildPlantIndex() {
     plantIndex.clear();
 
-    allHortas.forEach(h => {
+    allRecords.forEach(h => {
+        if (h.type !== 'horta') return; // Solo indexar plantas de hortas
+
         const plants = new Set();
 
         // Agregar plantas alimenticias
@@ -193,13 +289,13 @@ function buildPlantIndex() {
     });
 }
 
-function renderHortas(data) {
+function renderRecords(data) {
     const list = document.getElementById('hortas-list');
     if (!list) return;
 
     list.innerHTML = "";
 
-    // Limpiar marcadores antiguos de forma eficiente
+    // Limpiar marcadores antiguos
     markers.forEach(m => {
         if (m.marker && map.hasLayer(m.marker)) {
             map.removeLayer(m.marker);
@@ -209,10 +305,27 @@ function renderHortas(data) {
 
     // Renderizar nuevos elementos
     data.forEach((horta) => {
-        // Crear marcador con SVG más ligero
+        const isCampo = horta.type === 'campo';
+        const color = isCampo ? '#e35d38' : '#80987c'; // Rojo para campos (CA), Verde para hortas (HC)
+
+        // Mapear estado a colores
+        let statusClass = "bg-gray-100 text-gray-600";
+        const estado = (horta.estado || "").toLowerCase().trim();
+
+        if (estado === "em funcionamento") {
+            statusClass = "bg-[#80987c] text-white";
+        } else if (estado === "uso parcial") {
+            statusClass = "bg-[#f9b669] text-yellow-900";
+        } else if (estado === "ocupada moradia") {
+            statusClass = "bg-[#e35d38] text-white";
+        } else if (estado === "abandonada") {
+            statusClass = "bg-gray-200 text-gray-700";
+        }
+
+        // Crear marcador con SVG
         const svgIcon = L.divIcon({
             html: `<svg width="28" height="28" viewBox="0 0 28 28" style="filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));">
-                     <circle cx="14" cy="14" r="12" fill="#2d5a27" stroke="white" stroke-width="2"/>
+                     <circle cx="14" cy="14" r="12" fill="${color}" stroke="white" stroke-width="2"/>
                      <text x="14" y="18" text-anchor="middle" font-size="11" font-weight="bold" fill="white">${horta.id}</text>
                    </svg>`,
             className: '',
@@ -234,36 +347,43 @@ function renderHortas(data) {
         item.className = "horta-item flex items-center gap-4 p-4 border-b border-gray-100 cursor-pointer transition-all bg-white m-2 rounded-xl hover:shadow-md";
         item.dataset.horta = horta.id_internal;
 
-        const photoUrl = `photos/${horta.id}/1.jpg`;
-        const fallback = "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80&w=100&h=100";
+        const photoUrl = isCampo ? `logo10.png` : `photos/${horta.id}/1.jpg`;
+        const fallback = "logo10.png";
 
         item.innerHTML = `
             <div class="relative flex-shrink-0">
                 <img src="${photoUrl}" class="horta-thumb w-16 h-16 rounded-xl object-cover" 
                      onerror="this.src='${fallback}'" alt="${horta.horta}" loading="lazy">
-                <span class="absolute -top-2 -left-2 bg-[#2d5a27] text-white text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white">
+                <span class="absolute -top-2 -left-2 text-white text-[10px] font-bold w-6 h-6 flex items-center justify-center rounded-full border-2 border-white" style="background-color: ${color}">
                     ${horta.id}
                 </span>
             </div>
             <div class="overflow-hidden flex-1 min-w-0">
-                <span class="font-sidebar-title text-sm font-bold block truncate text-[#2d5a27]">${horta.horta}</span>
-                <span class="text-[11px] text-gray-500 block">${horta.bairro} • Zona ${horta.zona}</span>
-                <button class="text-[10px] text-green-700 font-bold mt-1 hover:underline uppercase tracking-wider ver-detalhes">VER DETALHES</button>
+                <span class="font-sidebar-title text-sm font-bold block truncate" style="color: ${color}">${horta.horta}</span>
+                <span class="text-[11px] text-gray-500 block text-ellipsis overflow-hidden">${horta.bairro} • Zona ${horta.zona}</span>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="px-2 py-0.5 rounded-full text-[8px] font-extrabold uppercase ${statusClass}">
+                        ${horta.estado || 'N/A'}
+                    </span>
+                    ${!isCampo ? `<button class="text-[10px] text-green-700 font-bold hover:underline uppercase tracking-wider ver-detalhes">VER DETALHES</button>` : ''}
+                </div>
             </div>
         `;
 
         item.addEventListener('click', (e) => focusHorta(horta.id_internal, true));
-        item.querySelector('.ver-detalhes').addEventListener('click', (e) => {
-            e.stopPropagation();
-            showDetails(horta.id_internal);
-        });
+        if (!isCampo) {
+            item.querySelector('.ver-detalhes').addEventListener('click', (e) => {
+                e.stopPropagation();
+                showDetails(horta.id_internal);
+            });
+        }
 
         list.appendChild(item);
     });
 }
 
 function focusHorta(id, updateMap = true) {
-    const horta = allHortas.find(h => h.id_internal === id);
+    const horta = allRecords.find(h => h.id_internal === id);
     if (!horta) return;
 
     // Remover clase activa de items anteriores
@@ -303,7 +423,7 @@ function focusHorta(id, updateMap = true) {
 }
 
 function showDetails(id) {
-    const h = allHortas.find(item => item.id_internal === id);
+    const h = allRecords.find(item => item.id_internal === id);
     if (!h) return;
 
     currentHortaId = h.id;
@@ -323,6 +443,28 @@ function showDetails(id) {
         const el = document.getElementById(id);
         if (el) el.textContent = text;
     });
+
+    // Actualizar estado y colores en el modal
+    const statusEl = document.getElementById('modal-status');
+    if (statusEl) {
+        const estado = (h.estado || "").toLowerCase().trim();
+        statusEl.textContent = h.estado || "N/A";
+
+        // Limpiar clases anteriores (manteniendo las estructurales)
+        statusEl.className = "px-6 py-2.5 rounded-full text-[10px] font-extrabold border uppercase tracking-tighter";
+
+        if (estado === "em funcionamento") {
+            statusEl.classList.add("bg-[#80987c]", "text-white", "border-[#80987c]");
+        } else if (estado === "uso parcial") {
+            statusEl.classList.add("bg-[#f9b669]", "text-yellow-900", "border-[#f9b669]");
+        } else if (estado === "ocupada moradia") {
+            statusEl.classList.add("bg-[#e35d38]", "text-white", "border-[#e35d38]");
+        } else if (estado === "abandonada") {
+            statusEl.classList.add("bg-gray-200", "text-gray-700", "border-gray-300");
+        } else {
+            statusEl.classList.add("bg-gray-100", "text-gray-600", "border-gray-200");
+        }
+    }
 
     updateCarouselDisplay();
     window.openModal('detail-modal');
@@ -454,18 +596,18 @@ function showWeatherError() {
  */
 function filterHortasByTerm(term) {
     if (!term) {
-        renderHortas(allHortas);
+        renderRecords(allRecords);
         return;
     }
 
     const termLower = term.toLowerCase();
-    const filtered = allHortas.filter(h =>
+    const filtered = allRecords.filter(h =>
         h.horta.toLowerCase().includes(termLower) ||
         h.bairro.toLowerCase().includes(termLower) ||
         h.id.toString().includes(termLower)
     );
 
-    renderHortas(filtered);
+    renderRecords(filtered);
 }
 
 /**
@@ -494,7 +636,7 @@ function searchByPlant(term) {
     }
 
     const matches = Array.from(matchingHortaIds)
-        .map(id => allHortas.find(h => h.id_internal === id))
+        .map(id => allRecords.find(h => h.id_internal === id))
         .filter(Boolean)
         .slice(0, 8); // Limitar a 8 resultados
 
@@ -576,7 +718,7 @@ function setupFilters() {
 
 window.addEventListener('load', () => {
     initMap();
-    loadHortas();
+    loadAllData();
     initLunarCalendar();
     getWeather();
     setupFilters();

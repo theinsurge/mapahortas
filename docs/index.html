@@ -35,14 +35,14 @@
 <body class="bg-[#fdfbf7] overflow-hidden">
     <!-- Navbar -->
     <nav
-        class="bg-[#2d5a27] text-white h-16 flex items-center justify-between px-4 md:px-6 shadow-md z-[2000] relative">
+        class="bg-[#80987c] text-white h-16 flex items-center justify-between px-4 md:px-6 shadow-md z-[2000] relative">
         <div class="flex items-center gap-2 md:gap-3">
             <!-- Hamburguer Menu for Mobile -->
             <button id="menu-toggle" class="lg:hidden p-2 -ml-2 hover:bg-white/10 rounded-lg transition-colors">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
 
-            <img src="logo10.png" alt="Logo" class="h-10 md:h-14 w-auto rounded-lg">
+            <img src="logo10.png" alt="Logo" class="h-[130px] w-auto rounded-lg object-contain">
             <div class="hidden sm:block">
                 <h1 class="font-bold text-xs md:text-sm tracking-tight leading-none uppercase">Hortas Comunitárias</h1>
                 <p class="text-[8px] md:text-[10px] opacity-80 font-medium tracking-widest">TERESINA • PIAUÍ</p>
@@ -55,17 +55,19 @@
                 <i
                     class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/50 text-xs"></i>
                 <input id="plant-search" type="text" autocomplete="off"
-                    placeholder="Pesquisar planta (ex: coentro,alface)..."
-                    class="bg-white/10 border border-white/20 text-white placeholder:text-white/40 pl-10 pr-4 py-2 rounded-full text-xs w-full focus:outline-none focus:bg-white/20 focus:ring-1 focus:ring-white/30 transition-all shadow-inner">
+                    placeholder="Pesquisar planta (ex: coentro, alface)..."
+                    class="bg-white/10 border border-white/40 text-white placeholder:text-white/70 pl-10 pr-4 py-2 rounded-full text-[11px] font-medium w-full focus:outline-none focus:bg-white/20 focus:ring-1 focus:ring-white/50 transition-all shadow-inner">
                 <div id="search-results"
                     class="hidden absolute top-full left-0 right-0 bg-white mt-3 rounded-2xl shadow-xl border border-gray-100 max-h-72 overflow-y-auto z-[2000] text-gray-800 p-2">
                 </div>
             </div>
 
+
+
             <!-- Botón PDF (Compacto en móvil) -->
             <a href="Hortas.pdf" target="_blank" rel="noopener noreferrer"
-                class="bg-white text-[#2d5a27] px-3 md:px-5 py-2 rounded-full text-[10px] md:text-[11px] font-bold hover:bg-green-50 transition shadow-sm active:scale-95 flex items-center gap-2 uppercase tracking-wider">
-                <i class="fa-solid fa-file-pdf"></i> <span class="hidden xs:inline">Baixar Mapa</span>
+                class="bg-[#e35d38] text-white px-4 md:px-5 py-2 rounded-full text-[10px] md:text-[11px] font-bold hover:bg-[#c24e2f] transition shadow-sm active:scale-95 flex items-center justify-center uppercase tracking-wider">
+                Baixar Mapa
             </a>
 
             <div class="hidden sm:block h-6 w-[1px] bg-white/20"></div>
@@ -73,12 +75,12 @@
             <!-- Widgets climáticos -->
             <div class="flex items-center gap-1 md:gap-2">
                 <button id="lunar-btn"
-                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
+                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/40 font-bold cursor-pointer">
                     <span id="lunar-widget">🌑</span>
                     <span class="hidden md:inline uppercase">Lua</span>
                 </button>
                 <button id="rain-btn"
-                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/10 font-bold cursor-pointer">
+                    class="flex items-center gap-1.5 md:gap-2 bg-white/10 hover:bg-white/20 px-2.5 md:px-3 py-1.5 rounded-full transition text-[10px] border border-white/40 font-bold cursor-pointer">
                     <i class="fa-solid fa-cloud-sun"></i>
                     <span id="rain-widget" class="uppercase">--°C</span>
                 </button>
@@ -100,15 +102,6 @@
                     <input type="text" id="horta-filter" placeholder="Pesquisar pelo nome ou bairro..."
                         class="w-full pl-10 pr-4 py-3 bg-gray-50 border-none rounded-xl text-sm focus:ring-2 focus:ring-[#2d5a27]/20 transition-all">
                 </div>
-                <div
-                    class="mt-3 flex items-center gap-4 text-[9px] text-gray-400 font-bold uppercase tracking-widest px-1">
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> CA = Campo Agrícola
-                    </span>
-                    <span class="flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> HC = Horta Comunitária
-                    </span>
-                </div>
             </div>
 
             <!-- Lista de hortas -->
@@ -117,30 +110,37 @@
             </div>
 
             <!-- Footer -->
-            <div class="p-6 bg-white border-t border-gray-100 flex flex-col items-center text-center gap-4">
-                <p class="text-[10px] text-gray-500 font-medium leading-relaxed max-w-[280px]">
-                    Mapeamento das hortas urbanas para fortalecer a agricultura comunitária e facilitar o acesso a
-                    alimentos orgânicos em Teresina, Piauí.
+            <div class="p-6 bg-[#80987c] text-white flex flex-col items-center text-center gap-4">
+                <p class="text-[10px] opacity-100 font-medium leading-relaxed max-w-[280px]">
+                    Mapeamento das hortas comunitárias e campos agrícolas para fortalecer a agricultura urbana e
+                    facilitar o acesso a alimentos orgânicos em Teresina, Piauí.
                 </p>
 
-                <div class="flex items-center gap-5">
-                    <a href="https://instagram.com/theinsurge" target="_blank" rel="noopener noreferrer"
-                        class="group flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-gradient-to-tr hover:from-[#f9ce34] hover:via-[#ee2a7b] hover:to-[#6228d7] transition-all duration-300">
-                        <i
-                            class="fa-brands fa-instagram text-xl text-gray-400 group-hover:text-white transition-colors"></i>
-                    </a>
-                    <a href="https://linkedin.com/company/theinsurge" target="_blank" rel="noopener noreferrer"
-                        class="group flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 hover:bg-[#0077b5] transition-all duration-300">
-                        <i
-                            class="fa-brands fa-linkedin text-xl text-gray-400 group-hover:text-white transition-colors"></i>
-                    </a>
-                </div>
-
+                <button onclick="openModal('about-modal')"
+                    class="bg-white/10 border border-white/20 text-white px-6 py-2.5 rounded-full text-[10px] font-bold hover:bg-white/20 transition-all active:scale-95 uppercase tracking-wider">
+                    Sobre o Projeto
+                </button>
             </div>
         </aside>
 
-        <!-- Mapa -->
-        <div id="map" class="flex-1"></div>
+        <div class="relative flex-1 h-full">
+            <div id="map" class="h-full w-full z-10"></div>
+
+            <!-- Leyenda flotante -->
+            <div
+                class="absolute bottom-6 left-6 z-[1000] bg-white/90 backdrop-blur-md p-3 rounded-2xl shadow-lg border border-white/20 flex flex-col gap-2 scale-90 sm:scale-100 origin-bottom-left">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full bg-[#80987c] shadow-sm"></span>
+                    <span class="text-[10px] font-bold text-gray-700 uppercase tracking-wider">HC = Horta
+                        Comunitária</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 rounded-full bg-[#e35d38] shadow-sm"></span>
+                    <span class="text-[10px] font-bold text-gray-700 uppercase tracking-wider">CA = Campo
+                        Agrícola</span>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- MODAL DE DETALHES -->
@@ -190,7 +190,7 @@
                         class="text-[11px] font-bold text-green-700 uppercase mb-3 flex items-center gap-2 tracking-widest">
                         <i class="fa-solid fa-seedling"></i> Sobre a Horta
                     </h3>
-                    <p id="modal-desc" class="text-gray-800 leading-relaxed text-xl font-medium font-crimson italic">
+                    <p id="modal-desc" class="text-gray-600 leading-relaxed text-lg font-medium font-trebuchet">
                     </p>
                 </section>
 
@@ -218,7 +218,7 @@
                             <p id="modal-addr" class="text-xs text-gray-500 font-medium"></p>
                         </div>
                     </div>
-                    <div
+                    <div id="modal-status"
                         class="bg-green-100 text-green-800 px-6 py-2.5 rounded-full text-[10px] font-extrabold border border-green-200 uppercase tracking-tighter">
                         EM FUNCIONAMENTO
                     </div>
@@ -250,6 +250,54 @@
                 </button>
             </div>
             <div id="rain-details" class="space-y-1"></div>
+        </div>
+    </div>
+
+    <!-- Modal Sobre o Projeto -->
+    <div id="about-modal" class="modal fixed inset-0 z-[3000] hidden items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="h-48 bg-[#80987c] relative flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 bg-black/10"></div>
+                <img src="logo10.png" alt="Logo Large" class="h-44 w-auto relative z-8 brightness-0 invert opacity-90">
+                <button onclick="closeModal('about-modal')"
+                    class="absolute top-6 right-6 bg-black/20 hover:bg-black/40 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-8 overflow-y-auto bg-[#fdfbf7]">
+                <h2 class="text-2xl font-bold text-green-900 mb-4">Sobre o Projeto</h2>
+                <div class="space-y-4 text-gray-700 leading-relaxed font-medium text-sm">
+                    <p>
+                        Este mapa é uma iniciativa da <span class="text-green-800 font-bold">The Insurge</span> para dar
+                        visibilidade e fortalecer o ecossistema de agricultura urbana em Teresina, Piauí.
+                    </p>
+                    <p>
+                        Nosso objetivo é facilitar o encontro entre produtores locais e a comunidade, promovendo a
+                        soberania alimentar e o acesso a alimentos orgânicos, frescos e cultivados com cuidado.
+                    </p>
+                    <div class="bg-green-50 p-6 rounded-2xl border border-green-100 mt-6">
+                        <h3 class="text-[10px] font-bold text-green-800 uppercase mb-2 tracking-widest">Nossa Missão
+                        </h3>
+                        <p class="text-xs italic text-green-700">
+                            "Mapear para integrar: transformar espaços urbanos em fontes de vida, saúde y comunidade a
+                            través de la agricultura colectiva."
+                        </p>
+                    </div>
+                    <div class="pt-6 border-t border-gray-100 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <a href="https://instagram.com/theinsurge" target="_blank"
+                                class="text-gray-400 hover:text-green-700 transition">
+                                <i class="fa-brands fa-instagram text-2xl"></i>
+                            </a>
+                            <a href="https://linkedin.com/company/theinsurge" target="_blank"
+                                class="text-gray-400 hover:text-blue-700 transition">
+                                <i class="fa-brands fa-linkedin text-2xl"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

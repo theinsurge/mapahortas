@@ -48,10 +48,10 @@ body {
 }
 
 .active-card {
-    border-left: 6px solid var(--verde-pdf);
-    background: linear-gradient(to right, #bfd1bc, #ffffff);
+    border-left: 6px solid #bfd1bc;
+    background: #f0fdf4;
     transform: translateX(8px) scale(1.02);
-    box-shadow: 0 12px 24px -8px rgba(45, 90, 39, 0.2), 0 4px 6px -2px rgba(45, 90, 39, 0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     z-index: 10;
     border-radius: 0 16px 16px 0 !important;
     position: relative;
@@ -323,4 +323,104 @@ html {
     .sidebar {
         display: none;
     }
+}
+
+/* Custom Leaflet Controls */
+.leaflet-control-layers {
+    border: none !important;
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0) !important;
+    border-radius: 10px !important;
+    background: transparent !important;
+    overflow: hidden;
+}
+
+.leaflet-control-layers-toggle {
+    background-color: var(--verde-pdf) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 16L1 9L12 2L23 9L12 16ZM12 18.5L21 12.8L23 14L12 21L1 14L3 12.8L12 18.5Z'%3E%3C/path%3E%3C/svg%3E") !important;
+    background-size: 20px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease;
+    border: none !important;
+}
+
+.leaflet-control-layers-toggle:hover {
+    background-color: #5a6e57 !important;
+    transform: scale(1.05);
+    border: none !important;
+}
+
+.leaflet-control-layers-expanded {
+    padding: 12px !important;
+    font-size: 10px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--marrom-texto) !important;
+    border: none !important;
+}
+
+.leaflet-control-layers-selector {
+    margin-right: 8px !important;
+}
+
+.leaflet-bar a {
+    background-color: white !important;
+    color: var(--verde-pdf) !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.leaflet-bar a:hover {
+    background-color: #f9f9f9 !important;
+    color: #5a6e57 !important;
+}
+
+.leaflet-bar {
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+}
+
+/* Locate Control */
+.locate-control {
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 50% !important;
+    margin-top: 10px !important;
+}
+
+.locate-btn {
+    background-color: white !important;
+    color: var(--verde-pdf) !important;
+    width: 40px !important;
+    height: 40px !important;
+    line-height: 40px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease;
+}
+
+.locate-btn:hover {
+    background-color: #f9f9f9 !important;
+    color: #5a6e57 !important;
+    transform: scale(1.05);
+}
+
+/* Leaflet Popup Styling */
+.leaflet-popup-content {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-style: italic !important;
+    font-size: 1rem !important;
+    color: var(--marrom-texto) !important;
+}
+
+/* Custom Font Classes */
+.font-trebuchet {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
+    font-style: italic !important;
 }
