@@ -415,8 +415,16 @@ html {
 .leaflet-popup-content {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif !important;
     font-style: italic !important;
-    font-size: 1rem !important;
+    font-size: 0.875rem !important;
+    /* Más pequeño para móvil */
     color: var(--marrom-texto) !important;
+    line-height: 1.4 !important;
+}
+
+@media (min-width: 640px) {
+    .leaflet-popup-content {
+        font-size: 1rem !important;
+    }
 }
 
 /* Custom Font Classes */
